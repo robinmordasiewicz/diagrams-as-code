@@ -1,0 +1,66 @@
+name: Render and Deploy Diagrams
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Export drawio files to SVG
+        uses: rlespinasse/drawio-export-action@v2
+        with:
+          format: svg
+          transparent: true
+          output: rendered
+
+      - name: Generate index.html
+        run: |
+          cd rendered
+          echo '<!DOCTYPE html>' > index.html
+          echo '<html lang="en"><head><meta charset="UTF-8">' >> index.html
+          echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">' >> index.html
+          echo '<title>Diagrams</title>' >> index.html
+          echo '<style>' >> index.html
+          echo '  body { font-family: system-ui, sans-serif; max-width: 1200px; margin: 0 auto; padding: 2rem; background: #f8f9fa; }' >> index.html
+          echo '  h1 { color: #333; }' >> index.html
+          echo '  .diagram { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 1rem; margin: 1.5rem 0; }' >> index.html
+          echo '  .diagram h2 { margin-top: 0; color: #555; font-size: 1.1rem; }' >> index.html
+          echo '  .diagram img { max-width: 100%; height: auto; }' >> index.html
+          echo '</style></head><body>' >> index.html
+          echo '<h1>Diagrams</h1>' >> index.html
+          for svg in *.svg; do
+            [ -f "$svg" ] || continue
+            name="${svg%.svg}"
+            echo "<div class=\"diagram\"><h2>${name}</h2><img src=\"${svg}\" alt=\"${name}\"></div>" >> index.html
+          done
+          echo '</body></html>' >> index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: rendered
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

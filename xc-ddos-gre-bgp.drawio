@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-02-03T00:00:00.000Z" agent="F5XC-GPT" version="22.0.0" editor="draw.io" type="device">
+  <!-- Page 1: High-Level Architecture -->
+  <diagram id="HighLevel" name="High-Level Architecture">
+    <mxGraphModel dx="1220" dy="720" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Internet -->
+        <mxCell id="2" value="Internet&#10;(Clients / Attack Sources)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- F5 Distributed Cloud DDoS Scrubbing Centers -->
+        <mxCell id="3" value="F5 Distributed Cloud&#10;DDoS Scrubbing Centers" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="130" width="220" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- BIG-IP CPE -->
+        <mxCell id="4" value="BIG-IP CPE&#10;(GRE + BGP)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="140" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Customer DC / Apps -->
+        <mxCell id="5" value="Customer DC / Apps" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="140" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Edge: Internet -> F5 XC -->
+        <mxCell id="6" value="Normal + Attack Traffic" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;" edge="1" parent="1" source="2" target="3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Edge: F5 XC -> BIG-IP -->
+        <mxCell id="7" value="Clean Traffic&#10;(GRE Tunnel)" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;" edge="1" parent="1" source="3" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Edge: BIG-IP -> DC -->
+        <mxCell id="8" value="Routed Traffic" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;" edge="1" parent="1" source="4" target="5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- Page 2: GRE and BGP Detail -->
+  <diagram id="GRETunnel" name="GRE and BGP Detail">
+    <mxGraphModel dx="1220" dy="720" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title / annotation -->
+        <mxCell id="2" value="GRE Underlay &amp; BGP Overlay (IPv4 example)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="420" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Underlay / external network layer label -->
+        <mxCell id="3" value="External Network / Underlay" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="260" y="70" width="280" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- BIG-IP External (Underlay) -->
+        <mxCell id="4" value="BIG-IP External&#10;192.168.200.200/24" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="110" width="180" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- F5 XC GRE Endpoint (Underlay) -->
+        <mxCell id="5" value="F5 XC GRE Endpoint&#10;192.168.100.100/24" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="110" width="200" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Edge: Underlay connectivity -->
+        <mxCell id="6" value="Underlay IP Connectivity" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;" edge="1" parent="1" source="4" target="5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- GRE / overlay layer label -->
+        <mxCell id="7" value="GRE Tunnel &amp; BGP Session (Overlay)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="240" y="210" width="320" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- BIG-IP Inner IP -->
+        <mxCell id="8" value="BIG-IP Inner IP&#10;10.10.10.2/30" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="250" width="180" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- F5 XC Inner IP -->
+        <mxCell id="9" value="F5 XC Inner IP&#10;10.10.10.1/30" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="250" width="200" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Edge: BGP over GRE -->
+        <mxCell id="10" value="BGP over GRE&#10;(tcp/179)" style="endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;" edge="1" parent="1" source="8" target="9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Protected prefixes annotation -->
+        <mxCell id="11" value="Prefixes advertised to F5 XC:&#10;192.168.0.0/24&#10;fdbf:97bd:efd3:c087::/48" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="200" y="360" width="360" height="90" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+
