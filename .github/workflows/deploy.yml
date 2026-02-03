@@ -30,6 +30,9 @@ jobs:
           output: rendered
           action-mode: all
 
+      - name: Fix output directory permissions
+        run: sudo chown -R $(id -u):$(id -g) rendered
+
       - name: Generate index.html
         run: |
           cd rendered
